@@ -1,2 +1,7 @@
 # BE-Modelisation
- UPSSITECH PROJECT
+
+UPSSITECH PROJECT
+
+# Run app 
+
+Run the main.py

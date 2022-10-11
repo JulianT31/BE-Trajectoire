@@ -39,9 +39,8 @@ def creation_s_de_t(V, t0, t2, Te):
     s_vector = np.array([a * t_vector[i] if t_vector[i] <= t1 else ((-1 * a) * (t_vector[i] - t1) + b) for i in
                          range(int(size_vector_t))])
 
-    affichage_courbe(t_vector, s_vector)
+    affichage_courbe(t_vector, s_vector, "bX")
     return s_vector
-
 
 def affichage_courbe(x, y, style=""):
     """
@@ -52,6 +51,7 @@ def affichage_courbe(x, y, style=""):
     :return:
     """
     plt.plot(x, y, style)
+    plt.title("Courbe de .s(t) en fonction de t (en discret)")
     plt.xlabel('t')
     plt.ylabel('s(t)')
     plt.show()
