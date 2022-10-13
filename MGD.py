@@ -1,15 +1,16 @@
 import numpy as np
 
 
-def get_T0N(qn, L1, L2, L3, L4, h1, h2):
-    liste_m = generate_matrices_H(qn, L1, L2, L3, L4, h1, h2)
-    print(liste_m)
+def get_T0N(liste_m):
+    return generate_t_i_j(liste_m, 0, len(liste_m))
 
-    t0N = liste_m[0]
-    for i in range(1, len(liste_m)):
-        t0N = np.dot(t0N, liste_m[i])
 
-    return t0N
+def generate_t_i_j(list_mat, i, j):
+    t_i_j = list_mat[i]
+    for k in range(i + 1, j):
+        t_i_j = np.dot(t_i_j, list_mat[k])
+
+    return t_i_j
 
 
 def generate_matrices_H(qn, L1, L2, L3, L4, h1, h2):
@@ -46,4 +47,10 @@ if __name__ == '__main__':
     h2 = 5
 
     qn = np.array([0, 0, 5, 0])
-    print(get_T0N(qn, L1, L2, L3, L4, h1, h2))
+
+    liste_mat_T = generate_matrices_H(qn, L1, L2, L3, L4, h1, h2)
+
+    t24 = generate_t_i_j(liste_mat_T, 2, 4)
+    t04 = generate_t_i_j(liste_mat_T, 0, 4)
+    print("T24 = \n" + str(t24))
+    print("T04 = \n" + str(t04))
