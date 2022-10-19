@@ -1,7 +1,15 @@
 import numpy as np
 
 
-def get_T0N(liste_m):
+def is_inversible(mat):
+    return True if np.linalg.det(mat) != 0 else False
+
+
+def determinant(mat):
+    return np.linalg.det(mat)
+
+
+def get_T_0_N(liste_m):
     return generate_t_i_j(liste_m, 0, len(liste_m))
 
 
@@ -19,16 +27,19 @@ def generate_matrices_H(qn, L1, L2, L3, L4, h1, h2):
                     [0, 0, 1, h1],
                     [0, 0, 0, 1],
                     ])
+
     t12 = np.array([[np.cos(qn[1]), -np.sin(qn[1]), 0, L2],
                     [np.sin(qn[1]), np.cos(qn[1]), 0, 0],
                     [0, 0, 1, 0],
                     [0, 0, 0, 1],
                     ])
+
     t23 = np.array([[1, 0, 0, L3],
                     [0, 1, 0, 0],
                     [0, 0, 1, qn[2]],
                     [0, 0, 0, 1],
                     ])
+
     t34 = np.array([[np.cos(qn[3]), -np.sin(qn[3]), 0, L4],
                     [np.sin(qn[3]), np.cos(qn[3]), 0, 0],
                     [0, 0, 1, h2],
@@ -50,7 +61,13 @@ if __name__ == '__main__':
 
     liste_mat_T = generate_matrices_H(qn, L1, L2, L3, L4, h1, h2)
 
+    # for mat in liste_mat_T:
+    #     print(mat)
+
     t24 = generate_t_i_j(liste_mat_T, 2, 4)
     t04 = generate_t_i_j(liste_mat_T, 0, 4)
     print("T24 = \n" + str(t24))
     print("T04 = \n" + str(t04))
+
+    # print(is_inversible(np.array([[0, 0],[0, 0]])))
+    # print(is_inversible()))

@@ -40,7 +40,7 @@ def affichage_3_courbes(V, t0, t2, Te, CI=0):
     # si t1 < t < t2 => -ab+V
     # si  0 > t < t1 => ab+V
     speed_vector = get_s_point_t(a, b, size_vector_t, t_vector)
-    affichage_courbe(t_vector, speed_vector, "Courbe de .s(t) en fonction de t (en discret)", "bX")
+    affichage_courbe(t_vector, speed_vector, "Vitesse en fonction de t (en discret)", "bX")
 
     # calcul de s(t) (position)
     # pos_vector = get_s_t(a, b, c, size_vector_t, t_vector)
@@ -48,11 +48,11 @@ def affichage_3_courbes(V, t0, t2, Te, CI=0):
 
     # calcul de s°°(t) (acceleration)
     ac_vector = get_s_seconde_t(a, b, size_vector_t, t_vector)
-    affichage_courbe(t_vector, ac_vector, "Courbe de s(t) seconde en fonction de t (en discret)", "bX")
+    affichage_courbe(t_vector, ac_vector, "Acceleration en fonction de t (en discret)", "bX")
 
     pos_vector = aire(t_vector, speed_vector, V, t1)
     affichage_courbe(t_vector, pos_vector,
-                     "Position en fonction du temps", "rX")
+                     "Distance en fonction du temps", "rX")
 
     sans_nom(pos_vector, t_vector, (0, 0, 0), (1, 1, 1))
 
