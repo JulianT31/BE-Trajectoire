@@ -2,6 +2,9 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+import afficheCourbesTP
+from afficheCourbesTP import *
+
 
 def get_discret(t0, t2, Te):
     """
@@ -59,6 +62,43 @@ def affichage_3_courbes(V, t0, t2, Te, CI=0):
     plt.show()
 
 
+def get_3_courbes(V, t0, t2, Te, CI=0):
+    """
+    Calcul et retourne une numpy array
+    :param V: valeur en ordonnée du point N
+    :param t0: debut intervalle
+    :param t2: fin intervalle
+    :param Te: période d'échantillonnage
+    :param CI: condition initiale
+    :return:
+    """
+    size_vector_t, t_vector = get_discret(t0, t2, Te)
+    t1 = t2 / 2  # attention peut etre division entiere
+
+    # paramètre fonction affine
+    a = (V / t1)
+    b = V
+    c = CI
+
+    # calcul de s°(t) en fonction de la valeur de t (vitesse)
+    # si t1 < t < t2 => -ab+V
+    # si  0 > t < t1 => ab+V
+    speed_vector = get_s_point_t(a, b, size_vector_t, t_vector)
+
+    # calcul de s(t) (position)
+    # pos_vector = get_s_t(a, b, c, size_vector_t, t_vector)
+    # affichage_courbe(t_vector, pos_vector, "Courbe de s(t) en fonction de t (en discret)", "bX")
+
+    # calcul de s°°(t) (acceleration)
+    ac_vector = get_s_seconde_t(a, b, size_vector_t, t_vector)
+
+    pos_vector = aire(t_vector, speed_vector, V, t1)
+
+    sans_nom(pos_vector, t_vector, (0, 0, 0), (1, 1, 1))
+
+    return t_vector, (pos_vector, speed_vector, ac_vector)
+
+
 def get_s_t(a, b, c, size_vector_t, t_vector):
     return np.array(
         [(a / 2) * (t_vector[i] ** 2) + (b * t_vector[i]) + c if t_vector[i] <= t1 else
@@ -113,6 +153,35 @@ def affichage_courbe(x, y, title="", style=""):
     plt.ylabel('s(t)')
 
 
+def generate_x_y_z_of_s(A, B, s, t):
+    u = (B[0] - A[0], B[1] - A[1], B[2] - A[2])
+    # d = math.sqrt((B[0] - A[0]) + (B[1] - A[1]) + (B[2] - A[2]))
+    d = math.sqrt((B[0] - A[0])**2 + (B[1] - A[1])**2 + (B[2] - A[2])**2)
+
+    x = np.array(
+        [A[0] + (s * u[0]) / d for s in range(int(len(s)))])
+    y = np.array(
+        [A[1] + (s * u[1]) / d for s in range(int(len(s)))])
+    z = np.array(
+        [A[2] + (s * u[2]) / d for s in range(int(len(s)))])
+
+    return x, y, z
+
+
+def generate_x_y_z_of_sd(A, B, s, t):
+    u = (B[0] - A[0], B[1] - A[1], B[2] - A[2])
+    d = math.sqrt((B[0] - A[0]) + (B[1] - A[1]) + (B[2] - A[2]))
+
+    x = np.array(
+        [u[0] / d for s in range(int(len(s)))])
+    y = np.array(
+        [u[1] / d for s in range(int(len(s)))])
+    z = np.array(
+        [u[2] / d for s in range(int(len(s)))])
+
+    return x, y, z
+
+
 if __name__ == '__main__':
     # Paramètres variables
     V = 10  # V != 0
@@ -121,4 +190,19 @@ if __name__ == '__main__':
     t2 = 2 * t1
     Te = 0.5  # Te != 0 (souvent entre 1 et 10 ms)
 
-    affichage_3_courbes(V, t0, t2, Te, CI=0)
+    # affichage_3_courbes(V, t0, t2, Te, CI=0)
+    t, (pos_vector, speed_vector, ac_vector) = get_3_courbes(V, t0, t2, Te, CI=0)
+
+    afficheCourbesTP.affiche3courbes(1, "Test", pos_vector, speed_vector, ac_vector, t, [t1])
+
+    A = (1, 7, -4)
+    B = (2, 6, 18)
+    # B = (2, 6, -4)
+    x, y, z = generate_x_y_z_of_s(A, B, pos_vector, t)
+    xd, yd, zd = generate_x_y_z_of_sd(A, B, pos_vector, t)
+
+
+    afficheCourbesTP.affiche3courbes(1, "Test", x, y, z, t, [t1])
+    afficheCourbesTP.affichage_3D(x, y, z)
+    # afficheCourbesTP.affichage_3D(xd, yd, zd)
+    print(math.sqrt(486))
