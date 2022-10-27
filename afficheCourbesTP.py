@@ -52,11 +52,23 @@ def affiche3courbes(numfig, nom, f, fd, fdd, t, tc):
     plt.show()
 
 
-def affichage_3D(xs, ys, zs):
+def affichage_3D(pos_op, speed_op, acc_op, title=""):
     fig = plt.figure()
 
-    ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(xs, ys, zs)
+    ax = fig.add_subplot(131, projection='3d')
+    ax.scatter(pos_op[0], pos_op[1], pos_op[2])
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("z")
+
+    ax = fig.add_subplot(132, projection='3d')
+    ax.scatter(speed_op[0], speed_op[1], speed_op[2])
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("z")
+
+    ax = fig.add_subplot(133, projection='3d')
+    ax.scatter(acc_op[0], acc_op[1], acc_op[2])
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     ax.set_zlabel("z")
@@ -82,7 +94,7 @@ def affiche_courbe2D(numfig, nom, t, d, coul):
     plt.xlabel('Temps')
     plt.ylabel('Valeur de ' + nom)
     plt.title('Affichage de la courbe ' + nom)
-    plt.show(block=False)  # affiche la figure a l'ecran
+    plt.show(block=True)  # affiche la figure a l'ecran
 
 
 ################################

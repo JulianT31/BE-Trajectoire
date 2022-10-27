@@ -94,7 +94,7 @@ def get_3_courbes(V, t0, t2, Te, CI=0):
 
     pos_vector = aire(t_vector, speed_vector, V, t1)
 
-    sans_nom(pos_vector, t_vector, (0, 0, 0), (1, 1, 1))
+    # sans_nom(pos_vector, t_vector, (0, 0, 0), (1, 1, 1))
 
     return t_vector, (pos_vector, speed_vector, ac_vector)
 
@@ -133,7 +133,7 @@ def sans_nom(s_vector, t_vector, A, B):
     d = np.array(
         [t_vector[i] * s_vector[i] for i in range(int(len(s_vector)))])
 
-    affichage_courbe(t_vector, d, "Position en fonction de la vitesse", "rX")
+    # affichage_courbe(t_vector, d, "Position en fonction de la vitesse", "rX")
 
 
 def affichage_courbe(x, y, title="", style=""):
@@ -151,35 +151,62 @@ def affichage_courbe(x, y, title="", style=""):
     plt.title(title)
     plt.xlabel('t')
     plt.ylabel('s(t)')
+    plt.show()
 
 
-def generate_x_y_z_of_s(A, B, s, t):
-    u = (B[0] - A[0], B[1] - A[1], B[2] - A[2])
-    # d = math.sqrt((B[0] - A[0]) + (B[1] - A[1]) + (B[2] - A[2]))
-    d = math.sqrt((B[0] - A[0])**2 + (B[1] - A[1])**2 + (B[2] - A[2])**2)
+def generate_x_y_z_of_s(A, B, s):
+    d = math.sqrt((B[0] - A[0]) ** 2 + (B[1] - A[1]) ** 2 + (B[2] - A[2]) ** 2)
+    print(d)
+    u = ((B[0] - A[0]) / d, (B[1] - A[1]) / d, (B[2] - A[2]) / d)
 
     x = np.array(
-        [A[0] + (s * u[0]) / d for s in range(int(len(s)))])
+        A[0] + (s * u[0]))
     y = np.array(
-        [A[1] + (s * u[1]) / d for s in range(int(len(s)))])
+        A[1] + (s * u[1]))
     z = np.array(
-        [A[2] + (s * u[2]) / d for s in range(int(len(s)))])
+        A[2] + (s * u[2]))
 
     return x, y, z
 
 
-def generate_x_y_z_of_sd(A, B, s, t):
-    u = (B[0] - A[0], B[1] - A[1], B[2] - A[2])
-    d = math.sqrt((B[0] - A[0]) + (B[1] - A[1]) + (B[2] - A[2]))
+def generate_x_y_z_of_sd(A, B, V, t, t1, speed_vector):
+    d = math.sqrt((B[0] - A[0]) ** 2 + (B[1] - A[1]) ** 2 + (B[2] - A[2]) ** 2)
+    u = ((B[0] - A[0]) / d, (B[1] - A[1]) / d, (B[2] - A[2]) / d)
 
     x = np.array(
-        [u[0] / d for s in range(int(len(s)))])
+        [u[0] * speed_vector[i] for i in range(int(len(t)))])
     y = np.array(
-        [u[1] / d for s in range(int(len(s)))])
+        [u[1] * speed_vector[i] for i in range(int(len(t)))])
     z = np.array(
-        [u[2] / d for s in range(int(len(s)))])
+        [u[2] * speed_vector[i] for i in range(int(len(t)))])
 
     return x, y, z
+
+
+def generate_x_y_z_of_sdd(A, B, V, t, t1, acc_vector):
+    d = math.sqrt((B[0] - A[0]) ** 2 + (B[1] - A[1]) ** 2 + (B[2] - A[2]) ** 2)
+    u = ((B[0] - A[0]) / d, (B[1] - A[1]) / d, (B[2] - A[2]) / d)
+
+    x = np.array(
+        [u[0] * acc_vector[i] for i in range(int(len(t)))])
+    y = np.array(
+        [u[1] * acc_vector[i] for i in range(int(len(t)))])
+    z = np.array(
+        [u[2] * acc_vector[i] for i in range(int(len(t)))])
+
+    return x, y, z
+
+
+def vitesse(tuple):
+    xd = tuple[0]
+    yd = tuple[1]
+    zd = tuple[2]
+
+    tab = []
+    for i in range(int(len(xd))):
+        tab.append(math.sqrt((xd[i] ** 2) + (yd[i] ** 2) + (zd[i] ** 2)))
+
+    return np.array(tab)
 
 
 if __name__ == '__main__':
@@ -193,16 +220,26 @@ if __name__ == '__main__':
     # affichage_3_courbes(V, t0, t2, Te, CI=0)
     t, (pos_vector, speed_vector, ac_vector) = get_3_courbes(V, t0, t2, Te, CI=0)
 
-    afficheCourbesTP.affiche3courbes(1, "Test", pos_vector, speed_vector, ac_vector, t, [t1])
-
-    A = (1, 7, -4)
-    B = (2, 6, 18)
+    A = (0, 0, 0)
+    B = (5, 5, 50)
+    # B = (2, 6, 18)
     # B = (2, 6, -4)
-    x, y, z = generate_x_y_z_of_s(A, B, pos_vector, t)
-    xd, yd, zd = generate_x_y_z_of_sd(A, B, pos_vector, t)
 
+    x, y, z = generate_x_y_z_of_s(A, B, pos_vector)
+    xd, yd, zd = generate_x_y_z_of_sd(A, B, V, t, t1, speed_vector)
+    xdd, ydd, zdd = generate_x_y_z_of_sdd(A, B, V, t, t1, ac_vector)
 
-    afficheCourbesTP.affiche3courbes(1, "Test", x, y, z, t, [t1])
-    afficheCourbesTP.affichage_3D(x, y, z)
-    # afficheCourbesTP.affichage_3D(xd, yd, zd)
-    print(math.sqrt(486))
+    # afficheCourbesTP.affiche3courbes(1, "Test", pos_vector, speed_vector, ac_vector, t, [t1])
+    #
+    afficheCourbesTP.affiche3courbes(2, "Position en fct s", x, y, z, t, [t1])
+    afficheCourbesTP.affiche3courbes(3, "Vitesse en fct s", xd, yd, zd, t, [t1])
+    afficheCourbesTP.affiche3courbes(4, "Acc en fct s", xdd, ydd, zdd, t, [t1])
+    #
+    # afficheCourbesTP.affichage_3D((x, y, z), (xd, yd, zd), (xdd, ydd, zdd))
+
+    vit = vitesse((xd, yd, zd))
+    # afficheCourbesTP.affiche_courbe2D(5, "Vitesse de O5 en fct du temps", t, vit, "r")
+    affichage_courbe(t,vit, style="rX")
+
+    # afficheCourbesTP.affiche3courbes(1, "Vitesse", xd, yd, zd, t, [t1])
+    # afficheCourbesTP.affiche3courbes(1, "Vitesse", xd, yd, zd, t, [t1])
