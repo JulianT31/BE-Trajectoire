@@ -133,7 +133,7 @@ def sans_nom(s_vector, t_vector, A, B):
     d = np.array(
         [t_vector[i] * s_vector[i] for i in range(int(len(s_vector)))])
 
-    # affichage_courbe(t_vector, d, "Position en fonction de la vitesse", "rX")
+    affichage_courbe(t_vector, d, "Position en fonction de la vitesse", "rX")
 
 
 def affichage_courbe(x, y, title="", style=""):
@@ -149,8 +149,8 @@ def affichage_courbe(x, y, title="", style=""):
     plt.figure()
     plt.plot(x, y, style)
     plt.title(title)
-    plt.xlabel('t')
-    plt.ylabel('s(t)')
+    plt.xlabel('x')
+    plt.ylabel('y')
     plt.show()
 
 
@@ -210,26 +210,28 @@ def vitesse(tuple):
 
 
 if __name__ == '__main__':
+    A = (0, 0, 0)
+    B = (5, 5, 50)
+    # B = (2, 6, 18)
+    # B = (2, 6, -4)
+
+    d = math.sqrt((B[0] - A[0]) ** 2 + (B[1] - A[1]) ** 2 + (B[2] - A[2]) ** 2)
+
     # Paramètres variables
     V = 10  # V != 0
     t0 = 0  # fixe
-    t1 = 5
+    t1 = d / V
     t2 = 2 * t1
     Te = 0.5  # Te != 0 (souvent entre 1 et 10 ms)
 
     # affichage_3_courbes(V, t0, t2, Te, CI=0)
     t, (pos_vector, speed_vector, ac_vector) = get_3_courbes(V, t0, t2, Te, CI=0)
 
-    A = (0, 0, 0)
-    B = (5, 5, 50)
-    # B = (2, 6, 18)
-    # B = (2, 6, -4)
-
     x, y, z = generate_x_y_z_of_s(A, B, pos_vector)
     xd, yd, zd = generate_x_y_z_of_sd(A, B, V, t, t1, speed_vector)
     xdd, ydd, zdd = generate_x_y_z_of_sdd(A, B, V, t, t1, ac_vector)
 
-    # afficheCourbesTP.affiche3courbes(1, "Test", pos_vector, speed_vector, ac_vector, t, [t1])
+    afficheCourbesTP.affiche3courbes(1, "Test", pos_vector, speed_vector, ac_vector, t, [t1])
     #
     afficheCourbesTP.affiche3courbes(2, "Position en fct s", x, y, z, t, [t1])
     afficheCourbesTP.affiche3courbes(3, "Vitesse en fct s", xd, yd, zd, t, [t1])
@@ -239,7 +241,7 @@ if __name__ == '__main__':
 
     vit = vitesse((xd, yd, zd))
     # afficheCourbesTP.affiche_courbe2D(5, "Vitesse de O5 en fct du temps", t, vit, "r")
-    affichage_courbe(t,vit, style="rX")
+    affichage_courbe(t, vit, style="bX")
 
     # afficheCourbesTP.affiche3courbes(1, "Vitesse", xd, yd, zd, t, [t1])
     # afficheCourbesTP.affiche3courbes(1, "Vitesse", xd, yd, zd, t, [t1])

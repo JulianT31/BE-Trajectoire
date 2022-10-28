@@ -49,7 +49,6 @@ def affiche3courbes(numfig, nom, f, fd, fdd, t, tc):
     for x in tc:
         plt.axvline(x, color="g", linestyle="--")
 
-    plt.show()
 
 
 def affichage_3D(pos_op, speed_op, acc_op, title=""):
@@ -89,7 +88,7 @@ def affichage_3D(pos_op, speed_op, acc_op, title=""):
 #############################################################################  
 def affiche_courbe2D(numfig, nom, t, d, coul):
     plt.figure(numfig)
-    plt.axis([-1.0, np.max(t), 0, 1.2 * np.max(d)])
+    # plt.axis([-1.0, np.max(t), 0, 1.2 * np.max(d)])
     plt.plot(t, d, "-", label="ligne -", color=coul)
     plt.xlabel('Temps')
     plt.ylabel('Valeur de ' + nom)
