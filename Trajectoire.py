@@ -1,13 +1,18 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-import afficheCourbesTP
+import afficheCourbesTP as ac
 
 
 class Trajectoire:
+    """
+    Classe trajectoire qui permet à partir de 4 paramètres A, B, theta, V,
+    de simuler une trajectoire.
+    """
+    # Variable statique
     num_fig = 0
 
-    def __init__(self, A, B, V, theta=0, Te=0.1):
+    def __init__(self, A, B, theta, V, Te=0.1):
         # ====================
         # Constantes
         # ====================
@@ -33,8 +38,9 @@ class Trajectoire:
         self.t_vector = np.array([])
 
         # Stocker avec des tuples
-        self.a = (self.V / self.t1)
-        self.b = self.V
+        self.a = (self.V / self.t1)  # coefficient directeur (ax +b)
+        self.b = self.V  # ordonnée à l'origine (ax +b)
+
         self.s = np.array([])
         self.sd = np.array([])
         self.sdd = np.array([])
@@ -49,10 +55,15 @@ class Trajectoire:
         self.speed = np.array([])
         self.acc = np.array([])
 
+        self.speed_O5 = np.array([])
+
         # init
         self.__init()
 
     def __get_discret(self):
+        """
+        Calcul toutes les valeurs discrete selon la période d'échantillonnage donnée dans un temps de temps calculé (t0 à t2).
+        """
         self.size_vector_t = (self.t2 // self.Te) + 1
         self.t_vector = np.array([self.t0 + i * self.Te for i in range(int(self.size_vector_t))])
 
@@ -62,26 +73,16 @@ class Trajectoire:
         self.__generate_all_s()
 
     def __generate_sd(self):
-        # self.sd = np.array([(self.a * self.t_vector) if self.t_vector <= self.t1 else
-        #                     (((-1 * self.a) * (self.t_vector - self.t1)) + self.b)])
-
         self.sd = np.array([self.a * self.t_vector[i] if self.t_vector[i] <= self.t1 else (
                 (-1 * self.a) * (self.t_vector[i] - self.t1) + self.b) for i in
                             range(int(self.size_vector_t))])
 
     def __generate_s(self):
-        # todo verifier ca
         self.s = np.array(
             [(self.t_vector[i] * self.sd[i]) / 2 if self.t_vector[i] <= self.t1 else (self.t1 * self.V) - (
                     ((self.t1 * 2 - self.t_vector[i]) * self.sd[i]) / 2)
              for i in
              range(int(self.size_vector_t))])
-
-        # self.s = np.array(
-        #     [(self.a / 2) * (self.t_vector[i] ** 2) + (self.b * self.t_vector[i]) + self.CI
-        #      if self.t_vector[i] <= self.t1 else
-        #      ((-1 * self.a) / 2) * (self.t_vector[i] ** 2) + self.b * (self.t_vector[i]) + self.CI for i in
-        #      range(int(self.size_vector_t))])
 
     def __generate_sdd(self):
         self.sdd = np.array([self.a if self.t_vector[i] <= self.t1 else (-1 * self.a) for i in
@@ -103,14 +104,15 @@ class Trajectoire:
                       np.array(self.u[1] * self.sd),
                       np.array(self.u[2] * self.sd))
 
-        # Vitesse
+        # Acc
         self.acc = (np.array(self.u[0] * self.sdd),
                     np.array(self.u[1] * self.sdd),
                     np.array(self.u[2] * self.sdd))
 
-    def vitesse_o5(self):
-        # todo : A tester
-        return np.array([math.sqrt((self.speed[0] ** 2) + (self.speed[1] ** 2) + (self.speed[2] ** 2))])
+    def __vitesse_O5(self):
+        self.speed_O5 = np.array(
+            [math.sqrt((self.speed[0][i] ** 2) + (self.speed[1][i] ** 2) + (self.speed[2][i] ** 2)) for i in
+             range(int(len(self.speed[0])))])
 
     def simulation(self):
         # Calcul de s(t)  s°(t) s°°(t)
@@ -119,33 +121,68 @@ class Trajectoire:
         # Calcul de x(s), y(s), z(s) et  x°(s), y°(s), z°(s) etc..
         self.__generate_opp()
 
+        # Calcul de la vitesse du point O5
+        self.__vitesse_O5()
+
     def __increment_num_fig(self):
         Trajectoire.num_fig += 1
         return Trajectoire.num_fig
 
-    def display(self, ):
-        afficheCourbesTP.affiche3courbes(self.__increment_num_fig(), "", self.s, self.sd, self.sdd, self.t_vector,
-                                         [self.t1])
-        afficheCourbesTP.affiche3courbes(self.__increment_num_fig(), "", self.pos[0], self.pos[1], self.pos[2],
-                                         self.t_vector, [self.t1])
-        afficheCourbesTP.affiche3courbes(self.__increment_num_fig(), "", self.speed[0], self.speed[1], self.speed[2],
-                                         self.t_vector, [self.t1])
-        afficheCourbesTP.affiche3courbes(self.__increment_num_fig(), "", self.acc[0], self.acc[1], self.acc[2],
-                                         self.t_vector, [self.t1])
+    def display(self, mouvement=True, operationnelle=True, O5=True, threeD=True):
+        # Loi de mouvement
+        if mouvement:
+            ac.affiche3courbes(self.__increment_num_fig(), ("s", "sd", "sdd"),
+                               "Représentation graphique de s, sd et sdd",
+                               self.s, self.sd, self.sdd, self.t_vector, [self.t1])
+
+        # Trajectoire opérationnelle
+        if operationnelle:
+            ac.affiche3courbes(self.__increment_num_fig(), ("x", "y", "z"),
+                               "Représentation graphique de x(s), y(s), z(s)",
+                               self.pos[0], self.pos[1], self.pos[2], self.t_vector, [self.t1])
+
+            ac.affiche3courbes(self.__increment_num_fig(), ("xd", "yd", "zd"),
+                               "Représentation graphique de xd(s), yd(s), zd(s)",
+                               self.speed[0], self.speed[1], self.speed[2], self.t_vector, [self.t1])
+
+            ac.affiche3courbes(self.__increment_num_fig(), ("xdd", "ydd", "zdd"),
+                               "Représentation graphique de xdd(s), ydd(s), zdd(s)",
+                               self.acc[0], self.acc[1], self.acc[2], self.t_vector, [self.t1])
+
+        # Vitesse point O5
+        if O5:
+            ac.affiche_courbe2D(self.__increment_num_fig(), ("temps", "vitesse"), "Vitesse du point O5", self.t_vector,
+                                self.speed_O5, "#2E86C1")
+
+        if threeD:
+            ac.affichage_3D(self.__increment_num_fig(), self.pos, self.speed, self.acc,
+                            ("Position", "Vitesse", "Acceleration"))
 
         plt.show()
+
+
+# def sans_nom(s_vector, t_vector, A, B):
+#     # (x, y, z)
+#     l = math.sqrt((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2)
+#
+#     d = np.array(
+#         [t_vector[i] * s_vector[i] for i in range(int(len(s_vector)))])
+#
+#     affichage_courbe(t_vector, d, "Position en fonction de la vitesse", "rX")
 
 
 if __name__ == '__main__':
     A = (0, 0, 0)
     B = (5, 5, 50)
     V = 10  # V != 0
-    traj = Trajectoire(A, B, V)
-    traj.simulation()
-    traj.display()
+    theta = 0
+    # traj = Trajectoire(A, B, theta, V)
+    # traj.simulation()
+    # traj.display()
 
     A = (0, 0, 0)
-    B = (0, 5, 50)
-    traj2 = Trajectoire(A, B, V)
+    B = (0, 0, 50)
+    traj2 = Trajectoire(A, B, theta, V)
     traj2.simulation()
     traj2.display()
+    # traj2.display(operationnelle=False)
