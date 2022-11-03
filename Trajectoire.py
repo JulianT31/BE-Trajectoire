@@ -155,8 +155,7 @@ class Trajectoire:
                                 self.speed_O5, "#2E86C1")
 
         if threeD:
-            ac.affichage_3D(self.__increment_num_fig(), self.pos, self.speed, self.acc,
-                            ("Position", "Vitesse", "Acceleration"))
+            ac.affichage_3D(self.__increment_num_fig(), self.pos, "Position")
 
         plt.show()
 
@@ -172,17 +171,17 @@ class Trajectoire:
 
 
 if __name__ == '__main__':
-    A = (0, 0, 0)
-    B = (5, 5, 50)
+    A = (1, 3, 0)
+    B = (5, 7, 50)
     V = 10  # V != 0
     theta = 0
-    # traj = Trajectoire(A, B, theta, V)
-    # traj.simulation()
-    # traj.display()
+    traj = Trajectoire(A, B, theta, V)
+    traj.simulation()
+    traj.display()
 
     A = (0, 0, 0)
     B = (0, 0, 50)
     traj2 = Trajectoire(A, B, theta, V)
     traj2.simulation()
-    traj2.display()
-    # traj2.display(operationnelle=False)
+    # traj2.display()
+    traj2.display(mouvement=False, O5=False)

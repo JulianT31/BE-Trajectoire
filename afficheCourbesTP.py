@@ -53,29 +53,15 @@ def affiche3courbes(numfig, axes, title, f, fd, fdd, t, tc):
         plt.axvline(x, color="g", linestyle="--")
 
 
-def affichage_3D(numfig, pos_op, speed_op, acc_op, titles):
+def affichage_3D(numfig, pos_op, title):
     fig = plt.figure(numfig)
 
-    ax = fig.add_subplot(131, projection='3d')
+    ax = plt.axes(projection='3d')
     ax.scatter(pos_op[0], pos_op[1], pos_op[2])
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     ax.set_zlabel("z")
-    ax.set_title(titles[0])
-
-    ax = fig.add_subplot(132, projection='3d')
-    ax.scatter(speed_op[0], speed_op[1], speed_op[2])
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_zlabel("z")
-    ax.set_title(titles[1])
-
-    ax = fig.add_subplot(133, projection='3d')
-    ax.scatter(acc_op[0], acc_op[1], acc_op[2])
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_zlabel("z")
-    ax.set_title(titles[2])
+    ax.set_title(title)
 
 
 #############################################################################

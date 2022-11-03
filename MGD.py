@@ -44,15 +44,19 @@ class MGD:
         return self.generate_t_i_j(0, len(self.list_tij))
 
     def generate_t_i_j(self, i, j):
-        t_i_j = self.list_tij[i]
-        for k in range(i + 1, j):
-            t_i_j = np.dot(t_i_j, self.list_tij[k])
+        if 0 <= i < j <= self.nb_liaison:
+            t_i_j = self.list_tij[i]
+            for k in range(i + 1, j):
+                t_i_j = np.dot(t_i_j, self.list_tij[k])
 
-        return t_i_j
+            return t_i_j
+
+        else:
+            print("generate_t_i_j : Probleme d'index")
 
 
 # def is_inversible(mat):
-#     return True if np.linalg.det(mat) != 0 else False
+#     return True if determinant(mat) != 0 else False
 #
 #
 # def determinant(mat):
@@ -60,7 +64,7 @@ class MGD:
 
 if __name__ == '__main__':
     qn = np.array([0, 0, 5, 0])
-    L = np.array([5, 3, 2, 7])
+    L = np.array([0, 0, 0, 0])
     h1 = 10
     h2 = 5
 
