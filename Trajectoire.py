@@ -177,10 +177,10 @@ if __name__ == '__main__':
     theta = 0
     traj = Trajectoire(A, B, theta, V)
     traj.simulation()
-    traj.display()
+    # traj.display()
 
     A = (0, 0, 0)
-    B = (0, 0, 50)
+    B = (5, 5, 50)
     traj2 = Trajectoire(A, B, theta, V)
     traj2.simulation()
     # traj2.display()
