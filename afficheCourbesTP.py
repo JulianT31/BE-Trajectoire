@@ -6,7 +6,6 @@ Created on Wed Feb 19 15:17:54 2020
 adapté par Julian TRANI
 """
 import matplotlib.pylab as plt
-import numpy as np
 
 
 #############################################################################
@@ -48,6 +47,50 @@ def affiche3courbes(numfig, axes, title, f, fd, fdd, t, tc):
     plt.plot(t, fdd, color="#2E86C1", marker='+')
     plt.xlabel('Temps')
     plt.ylabel(axes[2])
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+
+
+def affiche4courbes(numfig, axes, title, q1, q2, q3, q4, t, tc):
+    plt.figure(numfig)
+
+    plt.subplot(411)
+    plt.plot(t, q1[0], color="#2E86C1", marker='+', label="q1")
+    plt.plot(t, q1[1], color="#FFD500", marker='+', label="q1 bis")
+    plt.xlabel('Temps')
+    plt.ylabel(axes[0])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+    plt.title(title)
+
+    plt.subplot(412)
+    plt.plot(t, q2[0], color="#2E86C1", marker='+', label="q2")
+    plt.plot(t, q2[1], color="#FFD500", marker='+', label="q2 bis")
+    plt.xlabel('Temps')
+    plt.ylabel(axes[1])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+
+    plt.subplot(413)
+    plt.plot(t, q3, color="#2E86C1", marker='+')
+    plt.xlabel('Temps')
+    plt.ylabel(axes[2])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+
+    plt.subplot(414)
+    plt.plot(t, q4[0], color="#2E86C1", marker='+', label="q4")
+    plt.plot(t, q4[1], color="#FFD500", marker='+', label="q4 bis")
+    plt.xlabel('Temps')
+    plt.ylabel(axes[2])
+    plt.legend()
     plt.grid(True)
     for x in tc:
         plt.axvline(x, color="g", linestyle="--")

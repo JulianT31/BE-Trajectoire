@@ -1,7 +1,10 @@
 import math
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
+
 import afficheCourbesTP as ac
+from MGI import MGI
 
 
 class Trajectoire:
@@ -56,6 +59,18 @@ class Trajectoire:
         self.acc = np.array([])
 
         self.speed_O5 = np.array([])
+
+        # qn
+        self.q1 = np.array([])
+        self.q1_bis = np.array([])
+        self.q2 = np.array([])
+        self.q2_bis = np.array([])
+        self.q3 = np.array([])
+        self.q4 = np.array([])
+        self.q4_bis = np.array([])
+
+        # MGI
+        self.mgi = MGI([2, 2, 2, 2, 2], self.tetha)
 
         # init
         self.__init()
@@ -124,6 +139,9 @@ class Trajectoire:
         # Calcul de la vitesse du point O5
         self.__vitesse_O5()
 
+        # Calcul des q avec MGI
+        self.__generate_qn()
+
     def __increment_num_fig(self):
         Trajectoire.num_fig += 1
         return Trajectoire.num_fig
@@ -157,7 +175,25 @@ class Trajectoire:
         if threeD:
             ac.affichage_3D(self.__increment_num_fig(), self.pos, "Position")
 
+        ac.affiche4courbes(self.__increment_num_fig(), ("q1", "q2", "q3", "q4"),
+                           "Représentation graphique de q1,q2,q3 et q4",
+                           (self.q1, self.q1_bis), (self.q4, self.q4_bis), self.q3, (self.q4, self.q4_bis),
+                           self.t_vector, [self.t1])
+
         plt.show()
+
+    def __generate_qn(self):
+        for i in range(int(len(self.t_vector))):
+            q1, q1_bis, q2, q2_bis, q3, q4, q4_bis = self.mgi.calculate_qn(self.pos[0][i], self.pos[1][i],
+                                                                           self.pos[2][i])
+
+            self.q1 = np.append(self.q1, q1)
+            self.q1_bis = np.append(self.q1_bis, q1_bis)
+            self.q2 = np.append(self.q2, q2)
+            self.q2_bis = np.append(self.q2_bis, q2_bis)
+            self.q3 = np.append(self.q3, q3)
+            self.q4 = np.append(self.q4, q4)
+            self.q4_bis = np.append(self.q4_bis, q4_bis)
 
 
 # def sans_nom(s_vector, t_vector, A, B):
@@ -171,17 +207,17 @@ class Trajectoire:
 
 
 if __name__ == '__main__':
-    A = (1, 3, 0)
-    B = (5, 7, 50)
-    V = 10  # V != 0
-    theta = 0
+    A = (1, 6, 8)
+    B = (1, 7, 8)
+    V = 1  # V != 0
+    theta = 1.5
     traj = Trajectoire(A, B, theta, V)
     traj.simulation()
-    # traj.display()
+    traj.display()
 
-    A = (0, 0, 0)
-    B = (5, 5, 50)
-    traj2 = Trajectoire(A, B, theta, V)
-    traj2.simulation()
-    # traj2.display()
-    traj2.display(mouvement=False, O5=False)
+    # A = (0, 0, 0)
+    # B = (5, 5, 50)
+    # traj2 = Trajectoire(A, B, theta, V)
+    # traj2.simulation()
+    # # traj2.display()
+    # traj2.display(mouvement=False, O5=False)
