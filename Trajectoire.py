@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import afficheCourbesTP as ac
+from MGD import MGD
 from MGI import MGI
 
 
@@ -70,7 +71,8 @@ class Trajectoire:
         self.q4_bis = np.array([])
 
         # MGI
-        self.mgi = MGI([2, 2, 2, 2, 2], self.tetha)
+        self.mgi = MGI(self.tetha)
+        self.mgd = MGD()
 
         # init
         self.__init()
@@ -194,16 +196,6 @@ class Trajectoire:
             self.q3 = np.append(self.q3, q3)
             self.q4 = np.append(self.q4, q4)
             self.q4_bis = np.append(self.q4_bis, q4_bis)
-
-
-# def sans_nom(s_vector, t_vector, A, B):
-#     # (x, y, z)
-#     l = math.sqrt((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2)
-#
-#     d = np.array(
-#         [t_vector[i] * s_vector[i] for i in range(int(len(s_vector)))])
-#
-#     affichage_courbe(t_vector, d, "Position en fonction de la vitesse", "rX")
 
 
 if __name__ == '__main__':

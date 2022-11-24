@@ -77,7 +77,7 @@ def affiche4courbes(numfig, axes, title, q1, q2, q3, q4, t, tc):
         plt.axvline(x, color="g", linestyle="--")
 
     plt.subplot(413)
-    plt.plot(t, q3, color="#2E86C1", marker='+')
+    plt.plot(t, q3, color="#2E86C1", marker='+', label="q3")
     plt.xlabel('Temps')
     plt.ylabel(axes[2])
     plt.legend()

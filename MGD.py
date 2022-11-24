@@ -1,42 +1,38 @@
 import numpy as np
 
 from MGI import MGI
+from data import *
 
 
 class MGD:
 
-    def __init__(self, list_qi, list_longueur, h1, h2):
-        self.nb_liaison = len(list_qi)
-        self.list_qi = list_qi
-        self.list_longueur = list_longueur
-        self.h1 = h1
-        self.h2 = h2
+    def __init__(self):
+        self.nb_liaison = 4
+        self.list_qi = []
         self.list_tij = []
 
-        self.__generate_matrices_H()
-
     def __generate_matrices_H(self):
-        t01 = np.array([[np.cos(self.list_qi[0]), -np.sin(self.list_qi[0]), 0, self.list_longueur[0]],
+        t01 = np.array([[np.cos(self.list_qi[0]), -np.sin(self.list_qi[0]), 0, L1],
                         [np.sin(self.list_qi[0]), np.cos(self.list_qi[0]), 0, 0],
-                        [0, 0, 1, self.h1],
+                        [0, 0, 1, h1],
                         [0, 0, 0, 1],
                         ])
 
-        t12 = np.array([[np.cos(self.list_qi[1]), -np.sin(self.list_qi[1]), 0, self.list_longueur[1]],
+        t12 = np.array([[np.cos(self.list_qi[1]), -np.sin(self.list_qi[1]), 0, L1],
                         [np.sin(self.list_qi[1]), np.cos(self.list_qi[1]), 0, 0],
                         [0, 0, 1, 0],
                         [0, 0, 0, 1],
                         ])
 
-        t23 = np.array([[1, 0, 0, self.list_longueur[2]],
+        t23 = np.array([[1, 0, 0, L3],
                         [0, 1, 0, 0],
                         [0, 0, 1, self.list_qi[2]],
                         [0, 0, 0, 1],
                         ])
 
-        t34 = np.array([[np.cos(self.list_qi[3]), -np.sin(self.list_qi[3]), 0, self.list_longueur[3]],
+        t34 = np.array([[np.cos(self.list_qi[3]), -np.sin(self.list_qi[3]), 0, L4],
                         [np.sin(self.list_qi[3]), np.cos(self.list_qi[3]), 0, 0],
-                        [0, 0, 1, self.h2],
+                        [0, 0, 1, h2],
                         [0, 0, 0, 1],
                         ])
 
@@ -60,10 +56,15 @@ class MGD:
         t04 = self.get_T_0_N()
         R04 = t04[:3, :3]
         translation = np.transpose(np.array([t04[0, 3], t04[1, 3], t04[2, 3]]))
-        vect_col = np.array([self.list_longueur[4], 0, 0])
+        vect_col = np.array([L5, 0, 0])
 
         Xp = translation + np.dot(R04, vect_col)
         return Xp
+
+    def set_values(self, list_qi):
+        # Config
+        self.list_qi = list_qi
+        self.__generate_matrices_H()
 
     def get_values(self):
         Xp = self.__get_Xp()
@@ -79,19 +80,10 @@ class MGD:
         return Xp, teta
 
 
-# def is_inversible(mat):
-#     return True if determinant(mat) != 0 else False
-#
-#
-# def determinant(mat):
-#     return np.linalg.det(mat)
-
 if __name__ == '__main__':
     # MGD
     # qn = np.array([0, 0, 6, 0])
-    L = np.array([1, 1, 1, 1, 1])
-    h1 = 1
-    h2 = 1
+    L = np.array([L1, L2, L3, L4, L5])
     #
     # mgd = MGD(qn, L, h1, h2)
     #
@@ -134,7 +126,7 @@ if __name__ == '__main__':
     # print("theta = " + str(theta))
 
     qn = np.array([0, np.pi / 2, np.pi / 2, np.pi / 2])
-    mgd = MGD(qn, L, h1, h2)
+    mgd = MGD()
     Xp, theta = mgd.get_values()
     print("Xp = " + str(Xp))
     print("theta = " + str(theta))
