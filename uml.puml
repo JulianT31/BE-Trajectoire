@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Trajectoire *-- MGD
+Trajectoire *-- MGI
+Trajectoire *-- MDI
+
+class Trajectoire {
+Trajectoire(A, B, theta, V)
+simulation()
+display(mvt=True, op=True, O5=True, threeD=True)
+}
+
+class MGI {
+MGI()
+calculate_qn()
+}
+
+class MGD {
+MGD()
+get_T_0_N()
+generate_T_i_j(i, j):
+get_values(list_qi)
+}
+
+class MDI {
+MDI()
+get_values()
+}
+
+
+@enduml

@@ -39,9 +39,9 @@ class MGD:
         self.list_tij = [t01, t12, t23, t34]
 
     def get_T_0_N(self):
-        return self.generate_t_i_j(0, len(self.list_tij))
+        return self.generate_T_i_j(0, self.nb_liaison - 1)
 
-    def generate_t_i_j(self, i, j):
+    def generate_T_i_j(self, i, j):
         if 0 <= i < j <= self.nb_liaison:
             t_i_j = self.list_tij[i]
             for k in range(i + 1, j):
@@ -61,12 +61,11 @@ class MGD:
         Xp = translation + np.dot(R04, vect_col)
         return Xp
 
-    def set_values(self, list_qi):
+    def get_values(self, list_qi):
         # Config
         self.list_qi = list_qi
         self.__generate_matrices_H()
 
-    def get_values(self):
         Xp = self.__get_Xp()
         t04 = self.get_T_0_N()
 
@@ -82,66 +81,15 @@ class MGD:
 
 if __name__ == '__main__':
     # MGD
-    # qn = np.array([0, 0, 6, 0])
-    L = np.array([L1, L2, L3, L4, L5])
-    #
-    # mgd = MGD(qn, L, h1, h2)
-    #
-    # t24 = mgd.generate_t_i_j(2, 4)
-    # t04 = mgd.generate_t_i_j(0, 4)
-    # print("T24 = \n" + str(t24))
-    # print("T04 = \n" + str(t04))
-    #
-    # Xp = mgd.get_Xp()
-    # print("Xp = " + str(Xp))
-    #
-    # # MGI
-    # mgi = MGI(L)
-    # # q1, q2, q3, q4 = mgi.calculate_qn(6, 1, 8)
-    # q1, q1_bis, q2, q2_bis, q3, q4, q4_bis = mgi.calculate_qn(Xp[0], Xp[1], Xp[2])
-    #
-    # print(q1)
-    # print(q1_bis)
-    # print(q2)
-    # print(q2_bis)
-    # print(q3)
-    # print(q4)
-    # print(q4_bis)
-
-    # MGI
-    # mgi = MGI(L,0)
-    # q1, q1_bis, q2, q2_bis, q3, q4, q4_bis = mgi.calculate_qn(6, 0, 3)
-    # print(q1, q1_bis, q2, q2_bis, q3, q4, q4_bis)
-    #
-    # qn = np.array([q1, q2, q3, q4])
-    # mgd = MGD(qn, L, h1, h2)
-    # Xp, theta = mgd.get_values()
-    # print("Xp = " + str(Xp))
-    # print("theta = " + str(theta))
-    #
-    # qn = np.array([q1_bis, q2_bis, q3, q4_bis])
-    # mgd = MGD(qn, L, h1, h2)
-    # Xp, theta = mgd.get_values()
-    # print("Xp = " + str(Xp))
-    # print("theta = " + str(theta))
-
     qn = np.array([0, np.pi / 2, np.pi / 2, np.pi / 2])
     mgd = MGD()
-    Xp, theta = mgd.get_values()
+    Xp, theta = mgd.get_values(qn)
     print("Xp = " + str(Xp))
     print("theta = " + str(theta))
 
-    mgi = MGI(L, theta)
-    # q1, q2, q3, q4 = mgi.calculate_qn(6, 1, 8)
-    q1, q1_bis, q2, q2_bis, q3, q4, q4_bis = mgi.calculate_qn(Xp[0], Xp[1], Xp[2])
+    mgi = MGI()
+    qn1, qn2 = mgi.calculate_qn(Xp[0], Xp[1], Xp[2],theta)
 
-    print(q1)
-    print(q2)
-    print(q3)
-    print(q4)
-
-    print("")
-    print(q1_bis)
-    print(q2_bis)
-    print(q3)
-    print(q4_bis)
+    print("Solutions possibles :")
+    print(qn1)
+    print(qn2)

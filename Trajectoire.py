@@ -71,7 +71,7 @@ class Trajectoire:
         self.q4_bis = np.array([])
 
         # MGI
-        self.mgi = MGI(self.tetha)
+        self.mgi = MGI()
         self.mgd = MGD()
 
         # init
@@ -148,15 +148,15 @@ class Trajectoire:
         Trajectoire.num_fig += 1
         return Trajectoire.num_fig
 
-    def display(self, mouvement=True, operationnelle=True, O5=True, threeD=True):
+    def display(self, mvt=True, op=True, O5=True, threeD=True):
         # Loi de mouvement
-        if mouvement:
+        if mvt:
             ac.affiche3courbes(self.__increment_num_fig(), ("s", "sd", "sdd"),
                                "Représentation graphique de s, sd et sdd",
                                self.s, self.sd, self.sdd, self.t_vector, [self.t1])
 
         # Trajectoire opérationnelle
-        if operationnelle:
+        if op:
             ac.affiche3courbes(self.__increment_num_fig(), ("x", "y", "z"),
                                "Représentation graphique de x(s), y(s), z(s)",
                                self.pos[0], self.pos[1], self.pos[2], self.t_vector, [self.t1])
@@ -182,12 +182,28 @@ class Trajectoire:
                            (self.q1, self.q1_bis), (self.q4, self.q4_bis), self.q3, (self.q4, self.q4_bis),
                            self.t_vector, [self.t1])
 
+        # tab = []
+        # tab_x = []
+        # tab_y = []
+        # tab_z = []
+        # for j in range(int(len(self.t_vector))):
+        #     qn = [self.q1[j], self.q2[j], self.q3, self.q4]
+        #     Xp, theta = self.mgd.get_values(qn)
+        #     tab_x.append(Xp[0])
+        #     tab_y.append(Xp[1])
+        #     tab_z.append(Xp[2])
+        #
+        # tab.append(tab_x)
+        # tab.append(tab_y)
+        # tab.append(tab_z)
+        # ac.affichage_3D(self.__increment_num_fig(), tab, "Position")
+
         plt.show()
 
     def __generate_qn(self):
         for i in range(int(len(self.t_vector))):
-            q1, q1_bis, q2, q2_bis, q3, q4, q4_bis = self.mgi.calculate_qn(self.pos[0][i], self.pos[1][i],
-                                                                           self.pos[2][i])
+            [q1, q2, q3, q4], [q1_bis, q2_bis, q3, q4_bis] = self.mgi.calculate_qn(self.pos[0][i], self.pos[1][i],
+                                                                                   self.pos[2][i], self.tetha)
 
             self.q1 = np.append(self.q1, q1)
             self.q1_bis = np.append(self.q1_bis, q1_bis)

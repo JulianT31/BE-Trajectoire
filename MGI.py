@@ -4,18 +4,18 @@ from data import *
 
 
 class MGI:
-    def __init__(self, theta):
-        self.theta = theta
+    def __init__(self):
+        pass
 
-    def calculate_qn(self, X, Y, Z):
+    def calculate_qn(self, X, Y, Z, theta):
         # q3
         q3 = Z - h1 - h2
 
         # q2
         W2 = L3 + L4
         W = L2
-        Z_1 = X - (L5 * np.cos(self.theta)) - L1
-        Z_2 = Y - (L5 * np.sin(self.theta))
+        Z_1 = X - (L5 * np.cos(theta)) - L1
+        Z_2 = Y - (L5 * np.sin(theta))
 
         cos_q2 = (Z_1 ** 2 + Z_2 ** 2 - W ** 2 - W2 ** 2) / (2 * W * W2)
 
@@ -38,7 +38,8 @@ class MGI:
         q1_bis = np.arctan2(sin_q1_bis, cos_q1_bis)
 
         # q4
-        q4 = self.theta - q1 - q2
-        q4_bis = self.theta - q1_bis - q2_bis
+        q4 = theta - q1 - q2
+        q4_bis = theta - q1_bis - q2_bis
 
-        return q1, q1_bis, q2, q2_bis, q3, q4, q4_bis
+        return [q1, q2, q3, q4], [q1_bis, q2_bis, q3, q4_bis]
+        # return q1, q1_bis, q2, q2_bis, q3, q4, q4_bis
