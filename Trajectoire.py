@@ -182,21 +182,22 @@ class Trajectoire:
                            (self.q1, self.q1_bis), (self.q4, self.q4_bis), self.q3, (self.q4, self.q4_bis),
                            self.t_vector, [self.t1])
 
-        # tab = []
-        # tab_x = []
-        # tab_y = []
-        # tab_z = []
-        # for j in range(int(len(self.t_vector))):
-        #     qn = [self.q1[j], self.q2[j], self.q3, self.q4]
-        #     Xp, theta = self.mgd.get_values(qn)
-        #     tab_x.append(Xp[0])
-        #     tab_y.append(Xp[1])
-        #     tab_z.append(Xp[2])
-        #
-        # tab.append(tab_x)
-        # tab.append(tab_y)
-        # tab.append(tab_z)
-        # ac.affichage_3D(self.__increment_num_fig(), tab, "Position")
+        tab = []
+        tab_x = []
+        tab_y = []
+        tab_z = []
+        for j in range(int(len(self.t_vector))):
+            qn = [self.q1[j], self.q2[j], self.q3[j], self.q4[j]]
+            Xp, theta = self.mgd.get_values(qn)
+            print(Xp)
+            tab_x.append(Xp[0])
+            tab_y.append(Xp[1])
+            tab_z.append(Xp[2])
+
+        tab.append(tab_x)
+        tab.append(tab_y)
+        tab.append(tab_z)
+        ac.affichage_3D(self.__increment_num_fig(), tab, "Position")
 
         plt.show()
 
@@ -215,11 +216,11 @@ class Trajectoire:
 
 
 if __name__ == '__main__':
-    A = (1, 6, 8)
-    B = (1, 7, 8)
+    A = (0, 1, 8)
+    B = (4, 1, 8)
     V = 1  # V != 0
-    theta = 1.5
-    traj = Trajectoire(A, B, theta, V)
+    theta = 0
+    traj = Trajectoire(A, B, theta, V, Te=0.01)
     traj.simulation()
     traj.display()
 

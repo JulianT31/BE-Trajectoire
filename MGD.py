@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 from MGI import MGI
@@ -39,7 +41,7 @@ class MGD:
         self.list_tij = [t01, t12, t23, t34]
 
     def get_T_0_N(self):
-        return self.generate_T_i_j(0, self.nb_liaison - 1)
+        return self.generate_T_i_j(0, self.nb_liaison)
 
     def generate_T_i_j(self, i, j):
         if 0 <= i < j <= self.nb_liaison:
