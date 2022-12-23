@@ -1,4 +1,4 @@
-# Stock
+# Stockage config robot
 L1 = 1
 L2 = 1
 L3 = 1

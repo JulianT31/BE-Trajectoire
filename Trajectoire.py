@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import afficheCourbesTP as ac
+from MDI import MDI
 from MGD import MGD
 from MGI import MGI
 
@@ -70,9 +71,18 @@ class Trajectoire:
         self.q4 = np.array([])
         self.q4_bis = np.array([])
 
+        self.qd1 = self.q1 = np.array([])
+        self.qd1_bis = self.q1_bis = np.array([])
+        self.qd2 = self.q2 = np.array([])
+        self.qd2_bis = self.q2_bis = np.array([])
+        self.qd3 = self.q3 = np.array([])
+        self.qd4 = self.q4 = np.array([])
+        self.qd4_bis = self.q4_bis = np.array([])
+
         # MGI
         self.mgi = MGI()
         self.mgd = MGD()
+        self.mdi = MDI()
 
         # init
         self.__init()
@@ -148,7 +158,7 @@ class Trajectoire:
         Trajectoire.num_fig += 1
         return Trajectoire.num_fig
 
-    def display(self, mvt=True, op=True, O5=True, threeD=True):
+    def display(self, mvt=True, op=True, O5=True, threeD=True, robot=True, q_n=True):
         # Loi de mouvement
         if mvt:
             ac.affiche3courbes(self.__increment_num_fig(), ("s", "sd", "sdd"),
@@ -177,27 +187,31 @@ class Trajectoire:
         if threeD:
             ac.affichage_3D(self.__increment_num_fig(), self.pos, "Position")
 
-        ac.affiche4courbes(self.__increment_num_fig(), ("q1", "q2", "q3", "q4"),
-                           "Représentation graphique de q1,q2,q3 et q4",
-                           (self.q1, self.q1_bis), (self.q4, self.q4_bis), self.q3, (self.q4, self.q4_bis),
-                           self.t_vector, [self.t1])
+        if robot:
+            qn, qn2 = self.mgi.calculate_qn(self.A[0], self.A[1], self.A[2], self.tetha)
+            # recuperation des coords de chaque liaison
+            x, y, z = self.mgd.get_values_robot(qn)
 
-        tab = []
-        tab_x = []
-        tab_y = []
-        tab_z = []
-        for j in range(int(len(self.t_vector))):
-            qn = [self.q1[j], self.q2[j], self.q3[j], self.q4[j]]
-            Xp, theta = self.mgd.get_values(qn)
-            print(Xp)
-            tab_x.append(Xp[0])
-            tab_y.append(Xp[1])
-            tab_z.append(Xp[2])
+            ac.affichage_robot(self.__increment_num_fig(), x, y, z, "Configuration du robot dans l'espace à t0")
 
-        tab.append(tab_x)
-        tab.append(tab_y)
-        tab.append(tab_z)
-        ac.affichage_3D(self.__increment_num_fig(), tab, "Position")
+            qn = np.array([self.q1[-1], self.q2[-1], self.q3[-1], self.q4[-1]])
+            # qn, qn2 = self.mgi.calculate_qn(self.B[0], self.B[1], self.B[2], self.tetha)
+            # recuperation des coords de chaque liaison
+            x, y, z = self.mgd.get_values_robot(qn)
+
+            ac.affichage_robot(self.__increment_num_fig(), x, y, z, "Configuration du robot dans l'espace à t2")
+
+        if q_n:
+            ac.affiche4courbes_q(self.__increment_num_fig(), ("q1", "q2", "q3", "q4"),
+                                 "Représentation graphique de q1,q2,q3 et q4",
+                                 (self.q1, self.q1_bis), (self.q2, self.q2_bis), self.q3, (self.q4, self.q4_bis),
+                                 self.t_vector, [self.t1])
+
+            # calcul jacobienne
+            ac.affiche4courbes_q(self.__increment_num_fig(), ("qd1", "qd2", "qd3", "qd4"),
+                                 "Représentation graphique de qd1,qd2,qd3 et qd4",
+                                 (self.qd1, self.qd1_bis), (self.qd2, self.qd2_bis), self.qd3, (self.qd4, self.qd4_bis),
+                                 self.t_vector, [self.t1])
 
         plt.show()
 
@@ -214,19 +228,14 @@ class Trajectoire:
             self.q4 = np.append(self.q4, q4)
             self.q4_bis = np.append(self.q4_bis, q4_bis)
 
+            X_d = np.array([self.pos[0][i], self.pos[1][i], self.pos[2][i], self.tetha])
+            [qd1, qd2, qd3, qd4] = self.mdi.get_values([q1, q2, q3, q4], X_d)
+            [qd1_bis, qd2_bis, qd3, qd4_bis] = self.mdi.get_values([q1_bis, q2_bis, q3, q4_bis], X_d)
 
-if __name__ == '__main__':
-    A = (0, 1, 8)
-    B = (4, 1, 8)
-    V = 1  # V != 0
-    theta = 0
-    traj = Trajectoire(A, B, theta, V, Te=0.01)
-    traj.simulation()
-    traj.display()
-
-    # A = (0, 0, 0)
-    # B = (5, 5, 50)
-    # traj2 = Trajectoire(A, B, theta, V)
-    # traj2.simulation()
-    # # traj2.display()
-    # traj2.display(mouvement=False, O5=False)
+            self.qd1 = np.append(self.qd1, qd1)
+            self.qd1_bis = np.append(self.qd1_bis, qd1_bis)
+            self.qd2 = np.append(self.qd2, qd2)
+            self.qd2_bis = np.append(self.qd2_bis, qd2_bis)
+            self.qd3 = np.append(self.qd3, qd3)
+            self.qd4 = np.append(self.qd4, qd4)
+            self.qd4_bis = np.append(self.qd4_bis, qd4_bis)

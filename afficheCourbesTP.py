@@ -52,12 +52,13 @@ def affiche3courbes(numfig, axes, title, f, fd, fdd, t, tc):
         plt.axvline(x, color="g", linestyle="--")
 
 
-def affiche4courbes(numfig, axes, title, q1, q2, q3, q4, t, tc):
+def affiche4courbes_q(numfig, axes, title, q1, q2, q3, q4, t, tc):
     plt.figure(numfig)
 
     plt.subplot(411)
-    plt.scatter(t, q1[0], color="#2E86C1", marker='+', label="q1")
-    plt.scatter(t, q1[1], color="#FFD500", marker='+', label="q1 bis")
+    if len(q1) != 1:
+        plt.scatter(t, q1[0], color="#2E86C1", marker='+', label="q1")
+        plt.scatter(t, q1[1], color="#FFD500", marker='+', label="q1 bis")
     plt.xlabel('Temps')
     plt.ylabel(axes[0])
     plt.legend()
@@ -89,6 +90,47 @@ def affiche4courbes(numfig, axes, title, q1, q2, q3, q4, t, tc):
     plt.scatter(t, q4[0], color="#2E86C1", marker='+', label="q4")
     plt.scatter(t, q4[1], color="#FFD500", marker='+', label="q4 bis")
     plt.xlabel('Temps')
+    plt.ylabel(axes[3])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+
+
+def affiche4courbes_qd(numfig, axes, title, q1, q2, q3, q4, t, tc):
+    plt.figure(numfig)
+
+    plt.subplot(411)
+    plt.scatter(t, q1[0], color="#2E86C1", marker='+', label="qd1")
+    plt.xlabel('Temps')
+    plt.ylabel(axes[0])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+    plt.title(title)
+
+    plt.subplot(412)
+    plt.scatter(t, q2, color="#2E86C1", marker='+', label="qd2")
+    plt.xlabel('Temps')
+    plt.ylabel(axes[1])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+
+    plt.subplot(413)
+    plt.scatter(t, q3, color="#2E86C1", marker='+', label="q3")
+    plt.xlabel('Temps')
+    plt.ylabel(axes[2])
+    plt.legend()
+    plt.grid(True)
+    for x in tc:
+        plt.axvline(x, color="g", linestyle="--")
+
+    plt.subplot(414)
+    plt.scatter(t, q4, color="#2E86C1", marker='+', label="q4")
+    plt.xlabel('Temps')
     plt.ylabel(axes[2])
     plt.legend()
     plt.grid(True)
@@ -97,10 +139,25 @@ def affiche4courbes(numfig, axes, title, q1, q2, q3, q4, t, tc):
 
 
 def affichage_3D(numfig, pos_op, title):
-    fig = plt.figure(numfig)
-
+    plt.figure(numfig)
     ax = plt.axes(projection='3d')
     ax.scatter(pos_op[0], pos_op[1], pos_op[2])
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("z")
+    ax.set_title(title)
+
+
+def affichage_robot(numfig, x, y, z, title):
+    plt.figure(numfig)
+
+    color_list = ['k', 'b', 'b', 'b', 'b', 'r']
+    ax = plt.axes(projection='3d')
+
+    for i in range(len(x)):
+        ax.scatter(x[i], y[i], z[i], c=color_list[i], s=100)
+
+    ax.plot(x, y, z, color='b')
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     ax.set_zlabel("z")

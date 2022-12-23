@@ -41,5 +41,7 @@ class MGI:
         q4 = theta - q1 - q2
         q4_bis = theta - q1_bis - q2_bis
 
-        return [q1, q2, q3, q4], [q1_bis, q2_bis, q3, q4_bis]
-        # return q1, q1_bis, q2, q2_bis, q3, q4, q4_bis
+        deux_pi = 2 * np.pi
+        # return [q1, q2, q3, q4], [q1_bis, q2_bis, q3, q4_bis]
+        return [(q1 + deux_pi) % deux_pi, (q2 + deux_pi) % deux_pi, q3, (q4 + deux_pi) % deux_pi], \
+               [(q1_bis + deux_pi) % deux_pi, (q2_bis + deux_pi) % deux_pi, q3, (q4_bis + deux_pi) % deux_pi]

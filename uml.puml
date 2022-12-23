@@ -4,6 +4,7 @@
 Trajectoire *-- MGD
 Trajectoire *-- MGI
 Trajectoire *-- MDI
+Trajectoire *-- MDD
 
 class Trajectoire {
 Trajectoire(A, B, theta, V)
@@ -21,11 +22,18 @@ MGD()
 get_T_0_N()
 generate_T_i_j(i, j):
 get_values(list_qi)
+get_values_robot(list_qi)
 }
+
+class MDD {
+MDD()
+get_values(list_qi, list_qdi)
+}
+
 
 class MDI {
 MDI()
-get_values()
+get_values(list_qi, X_d)
 }
 
 

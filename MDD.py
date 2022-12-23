@@ -2,7 +2,7 @@ import numpy as np
 from data import *
 
 
-class MDI:
+class MDD:
     def __init__(self):
         self.jacobienne = np.eye(3, dtype=int)
         self.inv_jacobienne = np.array([])
@@ -21,13 +21,6 @@ class MDI:
                                     [0, 0, 1, 0],
                                     [1, 1, 0, 1]])
 
-    def __inv_jacobienne(self):
-        if np.linalg.det(self.jacobienne) != 0:
-            self.inv_jacobienne = np.linalg.inv(self.jacobienne)
-        else:
-            print("ERROR : jacobienne pas inversible (det = 0)")
-
-    def get_values(self, list_qi, X_d):
+    def get_values(self, list_qi, list_qdi):
         self.__generate_jacobienne(list_qi)
-        self.__inv_jacobienne()
-        return np.dot(self.inv_jacobienne, X_d)
+        return np.dot(self.jacobienne, list_qdi)  # return Xd

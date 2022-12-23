@@ -1,8 +1,4 @@
-import math
-
 import numpy as np
-
-from MGI import MGI
 from data import *
 
 
@@ -40,10 +36,10 @@ class MGD:
 
         self.list_tij = [t01, t12, t23, t34]
 
-    def get_T_0_N(self):
-        return self.generate_T_i_j(0, self.nb_liaison)
+    def __get_T_0_N(self):
+        return self.__generate_T_i_j(0, self.nb_liaison)
 
-    def generate_T_i_j(self, i, j):
+    def __generate_T_i_j(self, i, j):
         if 0 <= i < j <= self.nb_liaison:
             t_i_j = self.list_tij[i]
             for k in range(i + 1, j):
@@ -55,7 +51,7 @@ class MGD:
             print("generate_t_i_j : Probleme d'index")
 
     def __get_Xp(self):
-        t04 = self.get_T_0_N()
+        t04 = self.__get_T_0_N()
         R04 = t04[:3, :3]
         translation = np.transpose(np.array([t04[0, 3], t04[1, 3], t04[2, 3]]))
         vect_col = np.array([L5, 0, 0])
@@ -69,7 +65,7 @@ class MGD:
         self.__generate_matrices_H()
 
         Xp = self.__get_Xp()
-        t04 = self.get_T_0_N()
+        t04 = self.__get_T_0_N()
 
         arcos = np.arccos(t04[0][0])
         arsin = np.arcsin(t04[1][0])
@@ -80,18 +76,28 @@ class MGD:
 
         return Xp, teta
 
+    def get_values_robot(self, list_qi):
+        # Config
+        self.list_qi = list_qi
+        self.__generate_matrices_H()
 
-if __name__ == '__main__':
-    # MGD
-    qn = np.array([0, np.pi / 2, np.pi / 2, np.pi / 2])
-    mgd = MGD()
-    Xp, theta = mgd.get_values(qn)
-    print("Xp = " + str(Xp))
-    print("theta = " + str(theta))
+        # ajout centre robot
+        x = [0]
+        y = [0]
+        z = [0]
 
-    mgi = MGI()
-    qn1, qn2 = mgi.calculate_qn(Xp[0], Xp[1], Xp[2],theta)
+        # calcul des coords de chaque centre des liaisons
+        for i in range(1, self.nb_liaison + 1):
+            t0i = self.__generate_T_i_j(0, int(i))
+            coord = np.dot(t0i, np.array([0, 0, 0, 1]))
+            x.append(coord[0])
+            y.append(coord[1])
+            z.append(coord[2])
 
-    print("Solutions possibles :")
-    print(qn1)
-    print(qn2)
+        # Ajout coords organe terminal
+        Xp = self.__get_Xp()
+        x.append(Xp[0])
+        y.append(Xp[1])
+        z.append(Xp[2])
+
+        return x, y, z
