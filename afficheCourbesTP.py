@@ -56,9 +56,8 @@ def affiche4courbes_q(numfig, axes, title, q1, q2, q3, q4, t, tc):
     plt.figure(numfig)
 
     plt.subplot(411)
-    if len(q1) != 1:
-        plt.scatter(t, q1[0], color="#2E86C1", marker='+', label="q1")
-        plt.scatter(t, q1[1], color="#FFD500", marker='+', label="q1 bis")
+    plt.scatter(t, q1[0], color="#2E86C1", marker='+', label=axes[0])
+    plt.scatter(t, q1[1], color="#FFD500", marker='+', label=axes[0] + " bis")
     plt.xlabel('Temps')
     plt.ylabel(axes[0])
     plt.legend()
@@ -68,8 +67,8 @@ def affiche4courbes_q(numfig, axes, title, q1, q2, q3, q4, t, tc):
     plt.title(title)
 
     plt.subplot(412)
-    plt.scatter(t, q2[0], color="#2E86C1", marker='+', label="q2")
-    plt.scatter(t, q2[1], color="#FFD500", marker='+', label="q2 bis")
+    plt.scatter(t, q2[0], color="#2E86C1", marker='+', label=axes[1])
+    plt.scatter(t, q2[1], color="#FFD500", marker='+', label=axes[1] + " bis")
     plt.xlabel('Temps')
     plt.ylabel(axes[1])
     plt.legend()
@@ -87,8 +86,8 @@ def affiche4courbes_q(numfig, axes, title, q1, q2, q3, q4, t, tc):
         plt.axvline(x, color="g", linestyle="--")
 
     plt.subplot(414)
-    plt.scatter(t, q4[0], color="#2E86C1", marker='+', label="q4")
-    plt.scatter(t, q4[1], color="#FFD500", marker='+', label="q4 bis")
+    plt.scatter(t, q4[0], color="#2E86C1", marker='+', label=axes[3])
+    plt.scatter(t, q4[1], color="#FFD500", marker='+', label=axes[3] + " bis")
     plt.xlabel('Temps')
     plt.ylabel(axes[3])
     plt.legend()

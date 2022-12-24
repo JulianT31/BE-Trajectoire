@@ -45,15 +45,17 @@ def test_MDD_MDI():
 
 
 if __name__ == '__main__':
-    # test_MGD_MGI()
-    test_MDD_MDI()
+    test_MGD_MGI()
+    test_MDD_MDI()  # ne fonctionne pas
 
-    # A = (0, 1, 8)
-    # B = (4, 1, 8)
-    A = (2, 2, 2)
-    B = (2, 3, 2)
+    A = (0, 1, 8)
+    B = (4, 2, 9)
+    # A = (2, 2, 0)
+    # B = (2, 2, 2)
     V = 1  # V != 0
     theta = 0  # en rad
     traj = Trajectoire(A, B, theta, V, Te=0.01)
     traj.simulation()
     traj.display()
+
+

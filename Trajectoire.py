@@ -202,12 +202,13 @@ class Trajectoire:
             ac.affichage_robot(self.__increment_num_fig(), x, y, z, "Configuration du robot dans l'espace à t2")
 
         if q_n:
+            # affichage des qd
             ac.affiche4courbes_q(self.__increment_num_fig(), ("q1", "q2", "q3", "q4"),
                                  "Représentation graphique de q1,q2,q3 et q4",
                                  (self.q1, self.q1_bis), (self.q2, self.q2_bis), self.q3, (self.q4, self.q4_bis),
                                  self.t_vector, [self.t1])
 
-            # calcul jacobienne
+            # affichage des qdn
             ac.affiche4courbes_q(self.__increment_num_fig(), ("qd1", "qd2", "qd3", "qd4"),
                                  "Représentation graphique de qd1,qd2,qd3 et qd4",
                                  (self.qd1, self.qd1_bis), (self.qd2, self.qd2_bis), self.qd3, (self.qd4, self.qd4_bis),
@@ -217,6 +218,7 @@ class Trajectoire:
 
     def __generate_qn(self):
         for i in range(int(len(self.t_vector))):
+            # Calcul des qn avec le MGI
             [q1, q2, q3, q4], [q1_bis, q2_bis, q3, q4_bis] = self.mgi.calculate_qn(self.pos[0][i], self.pos[1][i],
                                                                                    self.pos[2][i], self.tetha)
 
@@ -228,7 +230,8 @@ class Trajectoire:
             self.q4 = np.append(self.q4, q4)
             self.q4_bis = np.append(self.q4_bis, q4_bis)
 
-            X_d = np.array([self.pos[0][i], self.pos[1][i], self.pos[2][i], self.tetha])
+            # Calcul Jacobienne avec le MDI
+            X_d = np.array([self.speed[0][i], self.speed[1][i], self.speed[2][i], self.tetha])
             [qd1, qd2, qd3, qd4] = self.mdi.get_values([q1, q2, q3, q4], X_d)
             [qd1_bis, qd2_bis, qd3, qd4_bis] = self.mdi.get_values([q1_bis, q2_bis, q3, q4_bis], X_d)
 

@@ -9,7 +9,7 @@ Trajectoire *-- MDD
 class Trajectoire {
 Trajectoire(A, B, theta, V)
 simulation()
-display(mvt=True, op=True, O5=True, threeD=True)
+display(mvt=True, op=True, O5=True, threeD=True, robot=True, q_n=True)
 }
 
 class MGI {
